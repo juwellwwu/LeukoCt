@@ -5,9 +5,17 @@ LeukoCt
   - [Content](#content)
   - [Software & Hardware Requirements](#software--hardware-requirements)
 - [Operation & DEMO](#operation--demo)
+  - [`STEP00_Batch_FastStackReg_XYZIntensityEq`](#step00_batch_faststackreg_xyzintensityeq)
+  - [`STEP01_VesselROI.m`](#step01_vesselroim)
+  - [`STEP02_SCS_VesselSz.m`](#step02_scs_vesselszm)
+  - [`STEP03_Velocity.m`](#step03_velocitym)
+  - [`STEP04_Velocity_Volume.m`](#step04_velocity_volumem)
+  - [`STEP05_WBCCount.m`](#step05_wbccountm)
+  - [`STEP06_WBCConc.m`](#step06_wbcconcm)
+  - [`STEP07_Report.m`](#step07_reportm)
   - [`STEP02_to_07_Batch_Pipeline.m`](#step02_to_07_batch_pipelinem)
   - [`WBCConcStabilityAnalysis.m`](#wbcconcstabilityanalysism)
-- [Citation](#citation)
+- [Software References](#software-references)
 
 **LeukoCt** measures the circulating leukocyte concentration in videos
 of the human oral mucosal microvasculature captured by a miniaturized
@@ -16,6 +24,9 @@ region of interest (ROI), and subsequently reports the leukocyte count,
 blood flow velocity and volume, the leukocyte concentration, and whether
 the concentration over time is sufficiently stable to be a robust
 predictor of the clinical WBCC value.
+
+Reference: Bagramyan et al. Towards Non-Invasive White Blood Cell Count
+in Humans. 2024.
 
 ## Installation Guide
 
@@ -54,8 +65,8 @@ requires the following toolboxes of the same version:
 
 Custom written functions, and packages from [MATLAB File
 Exchange](https://www.mathworks.com/matlabcentral/fileexchange/) are
-included in the “Dependencies” subfolder. Please see Citation section
-below.
+included in the “Dependencies” subfolder. Please see “Software
+References” section below.
 
 A 2023 Apple M2 Max MacBook Pro (Model MPHG3LL/A; 32 GB Memory) was used
 to run the software. With parallel pool (with Threads; 12 workers)
@@ -74,12 +85,15 @@ processed by scripts in the following order:
 - `STEP05_WBCCount.m`
 - `STEP06_WBCConc.m`
 - `STEP07_Report.m`
-- `WBCConcStabilityAnalysis.m` <br> <br> \####
-  `STEP00_Batch_FastStackReg_XYZIntensityEq` This script registers all
-  videos in the folder `LeukoCt/Data_In/RAWVids_In` directory, performs
-  flat line correction to remove illumination differences across each
-  video frame, and equalize the tissue intensity between the video
-  frames. The output is stored in `LeukoCt/Data_In/Reg`
+- `WBCConcStabilityAnalysis.m` <br>
+
+#### `STEP00_Batch_FastStackReg_XYZIntensityEq`
+
+This script registers all videos in the folder
+`LeukoCt/Data_In/RAWVids_In` directory, performs flat line correction to
+remove illumination differences across each video frame, and equalize
+the tissue intensity between the video frames. The output is stored in
+`LeukoCt/Data_In/Reg`
 
 ###### INPUT:
 
@@ -102,10 +116,13 @@ Update the subfolder names marked “\*\*\*\*\*” in the section
 Stored in `LeukoCt/Data_Out/Reg/Batch_FastStackReg_[TimeStamp]`.
 Registered, flat-field corrected videos in at-registration and
 post-registration dimensions, in .tif and .h5 format.  
-<br> <br> \#### `STEP01_VesselROI.m` The script defines a ROI in the
-input video with user assistance. It crops the video to exclude
-far-from-ROI regions, and defines the time units for the skeleton
-coordinate system.
+<br>
+
+#### `STEP01_VesselROI.m`
+
+The script defines a ROI in the input video with user assistance. It
+crops the video to exclude far-from-ROI regions, and defines the time
+units for the skeleton coordinate system.
 
 This is the only script in the pipeline that requires user interaction
 during its run.
@@ -131,9 +148,9 @@ during its run.
     the mouse, click anywhere on the vessel of interest, which starts a
     blue line, then end blue line draw anywhere with double click.
 3.  After the software creates a vessel luminal mask, the user is asked
-    to apply the “line eraser”. The line eraser (green line) breaks the
+    to apply the “line eraser”. The line eraser (green line) divides the
     mask where the drawn line crosses, and the software keeps the
-    largest piece of mask after the break. Using the mouse, the user can
+    largest piece of mask afterwards. Using the mouse, the user can
     apply the line eraser to remove undesirable areas, such as
     out-of-focus regions and where segments of the vessels intersect, or
     correct errors of the mask. The line eraser draw also terminates
@@ -144,6 +161,11 @@ during its run.
     box in (in cyan) where the skeleton aligns well with the flow axis,
     starting with the end closer to the origin of the flow.
 5.  The software completes the rest of the script.
+
+![Fig1](https://github.com/user-attachments/assets/37361cb2-d706-4ac9-ae23-ea32367b108b)
+![Fig2](https://github.com/user-attachments/assets/d48a0609-645d-4a64-a50c-df2442016e72)
+
+![](Figures/Fig1.png) ![](Figures/Fig2.png)
 
 ###### OUTPUT:<br>
 
@@ -159,10 +181,19 @@ last step (`WBCConcStabilityAnalysis.m`; see below).
 
 For STEP01, the key output is in the variable oROI. The saved image
 `Img_PolygonROI*.tif` shows the vessel luminal mask, the skeleton (flow
-axis) and the final ROI box drawn by the user. <br> <br> \####
-`STEP02_SCS_VesselSz.m` \#### `STEP03_Velocity.m` \####
-`STEP04_Velocity_Volume.m` \#### `STEP05_WBCCount.m` \####
-`STEP06_WBCConc.m` \#### `STEP07_Report.m`
+axis) and the final ROI box drawn by the user. <br>
+
+#### `STEP02_SCS_VesselSz.m`
+
+#### `STEP03_Velocity.m`
+
+#### `STEP04_Velocity_Volume.m`
+
+#### `STEP05_WBCCount.m`
+
+#### `STEP06_WBCConc.m`
+
+#### `STEP07_Report.m`
 
 #### `STEP02_to_07_Batch_Pipeline.m`
 
@@ -228,24 +259,40 @@ Key output variables:
 Other noteworthy outputs:
 
 - `STEP02_SCS_VesselSz.m`:
+
   - `SkeletonCoordinateSystem_RefSlice*.tif` (SCS overlaid on ROI)
   - `Img_FocusDiameter_Illus_[TimeStamp].tif` (ROI Contrast Map)
   - `tMidPt_Vessel_Lumen_Diameter_um_Plot_*.tif` (Vessel luminal
     diameter along ROI)
+
 - `STEP04_Velocity_Volume.m`:
+
   - `Plot_tMidPt_Velocity_um_s*.tif` (Flow velocity, in um/s)
   - `Plot_tMidPt_Volume_nL_min*.tif` (Flow volume rate, in nL/min)
+    
+![Fig3](https://github.com/user-attachments/assets/25ef3258-cbc6-4284-a029-c61b7201f35c)
+  ![](Figures/Fig3.png)
+
 - `STEP05_WBCCount.m`:
+
   - `PxWin_ImgMaskOverlay_WBCtoGateXYWinAreaRatio*.tif` (Final candidate
     cell count windows, of optimized size but different positions)
+
   - `PxWin_GMM_Plot_IPCellCt_WBCtoGateXYWinAreaRatio*.tif` (Time trace
     of leukocyte peaks for the candidate windows; “Optimized = 1” is the
     chosen window for leukocyte counting. Red dotted lines indicate the
     leukocyte-positive video frames from manual cell counting)
+    
+![Fig4](https://github.com/user-attachments/assets/e1ff0586-0b84-4057-b632-dc78b27b0877)
+    ![](Figures/Fig4.png)
+
 - `STEP07_Report.m`:
+
   - `[SampleID]_ReportDataLabel.csv` (important data from STEPS01-06 in
     spreadsheet format)
+
 - `STEP02_to_07_Batch_Pipeline.m`:
+
   - `BatchRun_Data_w_Label*.csv` (same as `*ReportDataLabel.csv` from
     STEP07, but for multiple videos)
   - `BatchRun_Summary*.csv` (this spreadsheets indicates which video in
@@ -287,7 +334,7 @@ data from STEP01-07 for each ROI. The description of each column can be
 found in the custom function
 `LeukoCt/Dependencies/WBCConcStabilityAnalysis/fCombineVesselVidData`.
 
-## Citation
+## Software References
 
 Weighted statistics for slope and flow velocity calculations is from the
 following reference:
